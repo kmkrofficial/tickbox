@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 import requests
 from keywordExtraction import getKeywordsFromOnline
 
@@ -92,8 +92,23 @@ def wikipedia_scrape(link):
     return text
 
 
-def britannica_scrape(link):
+def live_science_scrape(link):
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'lxml')
 
+    main_content = soup.find("div", {"id": "article-body"})
+
+    h2 = main_content.find_all("h2")
+
+    for i in h2:
+        i.decompose()
+
+    main_content = main_content.get_text()
+
+    return main_content
+
+
+def britannica_scrape(link):
     page = requests.get(link)
     soup = BeautifulSoup(page.text, 'lxml')
 
@@ -107,4 +122,4 @@ def britannica_scrape(link):
     return final
 
 
-print(getKeywordsFromOnline(britannica_scrape("https://www.britannica.com/science/amoeba-order")))
+print(live_science_scrape("https://www.livescience.com/54281-amoeba-definition.html"))

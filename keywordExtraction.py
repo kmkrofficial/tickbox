@@ -10,6 +10,6 @@ def getKeywords(text):
         string = str(entity).strip()
         if string not in result:
             result.append(string)
-    print(result)
+    return result
 
 

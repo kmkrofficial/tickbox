@@ -2,6 +2,19 @@ from bs4 import BeautifulSoup, element
 import requests
 
 
+def scrape_identifier(link):
+    if link.find("wikipedia") != -1:
+        return wikipedia_scrape(link)
+    elif link.find("geeksforgeeks") != -1:
+        return geeksforgeeks_scrape(link)
+    elif link.find("britannica") != -1:
+        return britannica_scrape(link)
+    elif link.find("livescience") != -1:
+        return live_science_scrape(link)
+    else:
+        return None
+
+
 def geeksforgeeks_scrape(link):
     page = requests.get(link)
     soup = BeautifulSoup(page.text, 'lxml')
@@ -119,4 +132,3 @@ def britannica_scrape(link):
         final += line.get_text()
 
     return final
-

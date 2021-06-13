@@ -30,9 +30,66 @@ def geeksforgeeks_scrape(link):
     # break multi-headlines into a line each
     chunks = list(phrase.strip() for line in lines for phrase in line.split("  "))
     # drop blank lines
-    # text = '\n'.join(chunk for chunk in chunks if chunk)
-    return ''.join(chunks)
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+    return text
 
 
-print(getKeywordsFromOnline(geeksforgeeks_scrape("https://www.geeksforgeeks.org/file-handling-python/")))
+def wikipedia_scrape(link):
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'lxml')
 
+    main_content = soup.find("div", class_="mw-body-content")
+    main_content.find("div", class_="toc").decompose()
+
+    references = main_content.find_all("sup", "reference")
+    if references is not None:
+        for reference in references:
+            reference.decompose()
+
+    edit_section = main_content.find_all("span", "mw-editsection")
+
+    if edit_section is not None:
+        for edit_section_button in edit_section:
+            edit_section_button.decompose()
+
+    thumbinners = main_content.find_all("div", "thumbinner")
+
+    if thumbinners is not None:
+        for thumbinner in thumbinners:
+            thumbinner.decompose()
+
+    external_links = main_content.find_all("a", class_="external text")
+    if external_links is not None:
+        for i in external_links:
+            i.decompose()
+
+    for script in main_content(["script", "style", "table"]):
+        script.extract()
+
+    reference_header = main_content.find("span", class_="mw-headline")
+    reference_list = main_content.find("div", class_="reflist")
+    if reference_list is not None:
+        reference_list.decompose()
+    if reference_header is not None:
+        reference_header.decompose()
+
+    bibliography = main_content.find("div", "refbegin")
+    if bibliography is not None:
+        bibliography.decompose()
+
+    h2 = main_content.find_all('h2')
+    if h2 is not None:
+        for i in h2:
+            i.decompose()
+
+    h3 = main_content.find_all('h3')
+    if h3 is not None:
+        for i in h3:
+            i.decompose()
+
+    text = main_content.get_text()
+
+    return text
+
+
+print(getKeywordsFromOnline(wikipedia_scrape("https://en.wikipedia.org/wiki/Barren_Island,_Brooklyn")))

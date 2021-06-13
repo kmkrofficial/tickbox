@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup, element
 import requests
-from keywordExtraction import getKeywordsFromOnline
 
 
 def geeksforgeeks_scrape(link):
@@ -121,5 +120,3 @@ def britannica_scrape(link):
 
     return final
 
-
-print(live_science_scrape("https://www.livescience.com/54281-amoeba-definition.html"))

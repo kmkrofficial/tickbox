@@ -24,7 +24,7 @@ def studentAnswerScriptExtract(file):
     return getKeywords(text)
 
 
-def getCosineSimilarity(query, file_name):
+def getCosineSimilarityFromOnline(query, file_name):
     internet_fetch = internetFetchAndKeywordExtract(query)
     answer_script = studentAnswerScriptExtract(file_name)
 
@@ -44,6 +44,24 @@ def getCosineSimilarity(query, file_name):
             "keywordsInText": len(answer_script),
             "keywords": answer_script,
             "cosineSimilarity": max(lis)
+        }
+    }
+
+    return json
+
+
+def getCosineSimilarityFromDrive(file_name1, file_name2):
+    answer_key = studentAnswerScriptExtract(file_name1)
+    answer_script = studentAnswerScriptExtract(file_name2)
+
+    cosine = cosineSimilarity(answer_key, answer_script)
+
+    json = {
+        file_name2: {
+            "answerText": checkFormatAndReturnText(file_name2),
+            "keywordsInText": len(answer_script),
+            "keywords": answer_script,
+            "cosineSimilarity": cosine
         }
     }
 

@@ -92,4 +92,19 @@ def wikipedia_scrape(link):
     return text
 
 
-print(getKeywordsFromOnline(wikipedia_scrape("https://en.wikipedia.org/wiki/Barren_Island,_Brooklyn")))
+def britannica_scrape(link):
+
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'lxml')
+
+    main_content = soup.find_all("p", "topic-paragraph")
+
+    final = ""
+
+    for line in main_content:
+        final += line.get_text()
+
+    return final
+
+
+print(getKeywordsFromOnline(britannica_scrape("https://www.britannica.com/science/amoeba-order")))

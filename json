@@ -1,0 +1,6 @@
+Filename
+	answer_text - String
+	keywords_in_text - Int
+	keywords_detected - Int
+	keywords - List of Strings
+	

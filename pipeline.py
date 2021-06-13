@@ -6,7 +6,6 @@ from scrapeWebsite import scrape_identifier
 
 
 def internetFetchAndKeywordExtract(query):
-
     links_obtained = linkFetch.searchForInternetResults(query)
 
     answer_keys = []
@@ -26,18 +25,26 @@ def studentAnswerScriptExtract(file):
 
 
 def getCosineSimilarity(query, file_name):
-
     internet_fetch = internetFetchAndKeywordExtract(query)
     answer_script = studentAnswerScriptExtract(file_name)
 
     average_cosine = 0
+    lis = []
     for i in internet_fetch:
         cosine = cosineSimilarity.cosineSimilarity(i, answer_script)
+        lis.append(cosine)
         print(cosine)
         average_cosine += cosine
-
     average_cosine /= len(internet_fetch)
-    print(average_cosine)
+    lis.append(average_cosine)
 
+    json = {
+        file_name: {
+            "answerText": checkFormatAndReturnText(file_name),
+            "keywordsInText": len(answer_script),
+            "keywords": answer_script,
+            "cosineSimilarity": max(lis)
+        }
+    }
 
-getCosineSimilarity("Amoeba", "static/sample.docx")
+    return json
